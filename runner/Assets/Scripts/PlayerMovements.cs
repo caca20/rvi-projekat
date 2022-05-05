@@ -45,6 +45,12 @@ public class PlayerMovements : MonoBehaviour
     {
         Vector3 changeInPosition = new Vector3(horizontal, 0f,0f);
         Vector3 goToPositon = transform.position + changeInPosition * speed * Time.deltaTime;
+        if(goToPositon.x <= -3.10f){
+            goToPositon.x = -3.10f;
+        } 
+        if(goToPositon.x >= 3.10f){
+            goToPositon.x = 3.10f;
+        }
         rgbody.MovePosition(goToPositon);
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) ) && isGrounded)
         {
