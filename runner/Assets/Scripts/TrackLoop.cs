@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TrackLoop : MonoBehaviour
 {
-    [SerializeField] public GameObject[] roadPrefabs;    
+    [SerializeField] public GameObject[] roadPrefabs;   
+    [SerializeField] public GameObject[] boosterPrefabs;    
     private Vector3 spawnPoint = new Vector3(0f,0f,340f);
 
     public int spawnTime;
@@ -16,9 +17,13 @@ public class TrackLoop : MonoBehaviour
     private GameObject startGround;
     private List<GameObject> middleGround;
     private List<RoadMovement> currentRoad;
+
+    private List<GameObject> currentBoosters;
     
     private void Awake() {
         currentRoad = new List<RoadMovement>();
+        currentBoosters = new List<GameObject>();
+
         timeToSpeedUp = 120;
 
         middleGround = new List<GameObject>();
@@ -40,6 +45,26 @@ public class TrackLoop : MonoBehaviour
     {
         StartCoroutine(SpawnCoroutine(spawnTime));
         StartCoroutine(SpeedUpRoad(timeToSpeedUp));
+        StartCoroutine(Boosters(timeToSpeedUp/40));
+    }
+
+    public IEnumerator Boosters(int boosterSpawnTime){
+        System.Random randomIndex = new System.Random();
+       //TODO:mozda staviti da se ne stavi svaki ovaj booster nego neki da se preskoce?
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(boosterSpawnTime);
+            GameObject createPrefab = boosterPrefabs[randomIndex.Next(0,boosterPrefabs.Length)];
+            float x = (float)randomIndex.NextDouble() * 5f- 2.5f;
+            float z = 165f;
+
+//TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
+
+            Vector3 positon = new Vector3(x,0.1f,z);
+            GameObject created = Instantiate(createPrefab,positon,Quaternion.identity);
+            created.transform.Rotate(0f,180f,0f,Space.Self);
+            currentBoosters.Add(created);
+        }
     }
 
     public IEnumerator SpeedUpRoad(int speedUpTime){
@@ -50,6 +75,14 @@ public class TrackLoop : MonoBehaviour
             foreach (RoadMovement item in currentRoad)
             {
                 item.SpeedUp(moveSpeed);
+            }
+
+            foreach (GameObject obj in currentBoosters)
+            {
+                if(obj){
+                    RoadMovement booster = obj.GetComponent<RoadMovement>();
+                    booster.SpeedUp(moveSpeed);
+                }
             }
        }
     }
@@ -75,7 +108,7 @@ public class TrackLoop : MonoBehaviour
                     spawnPoint.z += 7.41f; 
                     spawnPoint.x = 0f;
                     roadPrefab.transform.position = spawnPoint;
-                    instantiatedRoad = InstantiateRoad(endGround,spawnPoint);
+                    instantiatedRoad = InstantiateObject(endGround,spawnPoint);
                     lastSpawned = instantiatedRoad;
                     currentRoad.Add(instantiatedRoad);
 
@@ -105,7 +138,7 @@ public class TrackLoop : MonoBehaviour
                         spawnPoint = lastSpawned.transform.position;
                         spawnPoint.z += 6.75f;
                         roadPrefab.transform.position = spawnPoint;
-                        instantiatedRoad = InstantiateRoad(endGround,spawnPoint);
+                        instantiatedRoad = InstantiateObject(endGround,spawnPoint);
                         lastSpawned = instantiatedRoad;
                         currentRoad.Add(instantiatedRoad);
 
@@ -132,7 +165,7 @@ public class TrackLoop : MonoBehaviour
                         spawnPoint = lastSpawned.transform.position;
                         spawnPoint.z += 7.59f;
                         roadPrefab.transform.position = spawnPoint;
-                        instantiatedRoad = InstantiateRoad(startGround, spawnPoint);
+                        instantiatedRoad = InstantiateObject(startGround, spawnPoint);
                         lastSpawned = instantiatedRoad;
                         currentRoad.Add(instantiatedRoad);
 
@@ -153,14 +186,14 @@ public class TrackLoop : MonoBehaviour
                         }
                     }
                 }
-            instantiatedRoad = InstantiateRoad(roadPrefab, spawnPoint);
+            instantiatedRoad = InstantiateObject(roadPrefab, spawnPoint);
             spawnPoint = instantiatedRoad.transform.position;
             lastSpawned = instantiatedRoad;
             currentRoad.Add(instantiatedRoad);
             yield return new WaitForSecondsRealtime(timeForSpawn);
         }
     }
-    private RoadMovement InstantiateRoad(GameObject prefab, Vector3 position){
+    private RoadMovement InstantiateObject(GameObject prefab, Vector3 position){
         GameObject created = Instantiate(prefab, position, Quaternion.identity);
         RoadMovement road = created.GetComponent<RoadMovement>();
         road.SpeedUp(moveSpeed);

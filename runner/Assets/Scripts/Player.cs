@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private int points;
+    public int points;
     [SerializeField] public Rigidbody rgdbody;
     [SerializeField] public GameObject player;
 
@@ -15,7 +15,8 @@ public class Player : MonoBehaviour
   //red potion
     public void Die(){
         Destroy(gameObject);
-        //popup
+        Debug.Log("Player RIP");
+        //popup to stop the game
     }
 
     void Awake()
@@ -28,17 +29,22 @@ public class Player : MonoBehaviour
         if(item.tag == "Coin"){
             Coins coins = item.GetComponent<Coins>();
             AddPoints(coins.GetValueOfCoins());
+            Destroy(other.gameObject);
         }
 
         if(item.tag == "RedPotion"){
             Die();
+            Debug.Log("red potion");
+            Destroy(other.gameObject);
         }
 
         if(item.tag == "BluePotion"){
-
+            Debug.Log("blue potion");
+            Destroy(other.gameObject);
         }
 
-        Destroy(other.gameObject);
+        //TODO:kad se sudari sa preprekama, zaustavlja se igra?
+
     }
 
     private void Update() {

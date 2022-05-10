@@ -8,8 +8,6 @@ public class RoadMovement : MonoBehaviour
     private Vector3 moveVector = new Vector3(0f,0f,1f);
     public float moveSpeed = 3;
 
-    [SerializeField] public GameObject potionPrefab;
-
     //TODO: kad se pauzira da se zaustavi kretanje ?
 
     void Start()
@@ -25,7 +23,7 @@ public class RoadMovement : MonoBehaviour
         Vector3 goToPosition = moveVector*moveSpeed*Time.deltaTime;
         transform.Translate(goToPosition);
     
-        if(transform.position.z <= destination.z){
+        if(gameObject && transform.position.z <= destination.z){
             Destroy(gameObject);
         }
     }

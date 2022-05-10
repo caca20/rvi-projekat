@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 18897641}
   - component: {fileID: 18897645}
   - component: {fileID: 18897646}
+  - component: {fileID: 18897647}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -256,6 +257,20 @@ MonoBehaviour:
   jump: {x: 0, y: 0, z: 0}
   jumpForce: 2
   isGrounded: 0
+--- !u!114 &18897647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18897640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbfaf37eb0268684973524e1dc43059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rgdbody: {fileID: 18897645}
+  player: {fileID: 18897640}
 --- !u!1 &28076903
 GameObject:
   m_ObjectHideFlags: 0
@@ -4221,6 +4236,11 @@ MonoBehaviour:
   - {fileID: 9145293404691650819, guid: c38a11054ed03f3df8f8e84100ac041e, type: 3}
   - {fileID: 5813413229869107601, guid: de7fd5360d8b423038a74c5f6a5e0b89, type: 3}
   - {fileID: 3281960688448054139, guid: a811b4c7ee7d43916bc33813d2832630, type: 3}
+  boosterPrefabs:
+  - {fileID: 1769567917985599100, guid: 3f46fe31c54b1ea589ed8082d105661c, type: 3}
+  - {fileID: 7552761533567182211, guid: beacbc3e93868a8ae99401e7c31fee3f, type: 3}
+  - {fileID: 8267563643370923386, guid: 6b6155b13f3c292468f24be5878ec462, type: 3}
+  - {fileID: 880103386841748853, guid: 6959a25e438e21a72bfd952cc25d38d1, type: 3}
   spawnTime: 3
   timeToSpeedUp: 0
   lastSpawned: {fileID: 753090639}
