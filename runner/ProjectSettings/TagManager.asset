@@ -12,6 +12,7 @@ TagManager:
   - RedPotion
   - BluePotion
   - Coin
+  - Obstacle
   layers:
   - Default
   - TransparentFX

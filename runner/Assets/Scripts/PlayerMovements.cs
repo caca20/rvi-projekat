@@ -6,7 +6,6 @@ using UnityEngine;
 public class PlayerMovements : MonoBehaviour
 {
     [SerializeField] Rigidbody rgbody;
-    [SerializeField] Camera cam;
     [SerializeField, Range(1f, 5f)] private float speed = 5f;
  
     public Vector3 jump;

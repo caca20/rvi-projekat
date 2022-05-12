@@ -19,6 +19,8 @@ public class TrackLoop : MonoBehaviour
     private List<RoadMovement> currentRoad;
 
     private List<GameObject> currentBoosters;
+    public GameObject obstaclePrefab;
+    private System.Random randomIndex = new System.Random();
     
     private void Awake() {
         currentRoad = new List<RoadMovement>();
@@ -41,16 +43,37 @@ public class TrackLoop : MonoBehaviour
         }
     }
 
+    private void Update() {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if(player==null){
+            StopAllCoroutines(); //TODO: ne radi iz nekog razloga
+            //popup
+        }
+    }
+
     void Start()
     {
         StartCoroutine(SpawnCoroutine(spawnTime));
         StartCoroutine(SpeedUpRoad(timeToSpeedUp));
         StartCoroutine(Boosters(timeToSpeedUp/40));
+        StartCoroutine(Obstacles(spawnTime*2));
     }
 
+    public IEnumerator Obstacles(int showTime){
+        while (true)
+        {
+            if(randomIndex.NextDouble()>=0.2){
+                Vector3 pos = new Vector3(0f,0.25f,130f);
+                pos.x = (float)randomIndex.NextDouble() * 4f - 2f;
+                RoadMovement created = InstantiateObject(obstaclePrefab,pos);
+                yield return new WaitForSecondsRealtime(showTime);
+            }
+        }
+    }
+    
+
     public IEnumerator Boosters(int boosterSpawnTime){
-        System.Random randomIndex = new System.Random();
-       //TODO:mozda staviti da se ne stavi svaki ovaj booster nego neki da se preskoce?
+        //TODO:mozda staviti da se ne stavi svaki ovaj booster nego neki da se preskoce?
         while (true)
         {
             yield return new WaitForSecondsRealtime(boosterSpawnTime);
@@ -58,7 +81,7 @@ public class TrackLoop : MonoBehaviour
             float x = (float)randomIndex.NextDouble() * 5f- 2.5f;
             float z = 165f;
 
-//TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
+        //TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
 
             Vector3 positon = new Vector3(x,0.1f,z);
             GameObject created = Instantiate(createPrefab,positon,Quaternion.identity);
@@ -90,7 +113,6 @@ public class TrackLoop : MonoBehaviour
     //TODO:srediti kod ispod
     public IEnumerator SpawnCoroutine(int timeForSpawn)
     {
-        System.Random randomIndex = new System.Random();
         
         while (true)
         {

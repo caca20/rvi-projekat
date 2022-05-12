@@ -7,6 +7,11 @@ public class Player : MonoBehaviour
     public int points;
     [SerializeField] public Rigidbody rgdbody;
     [SerializeField] public GameObject player;
+    [SerializeField] public Camera cam;
+
+    private bool boosterOn=false;
+
+    private int endTime=3;
 
     public void AddPoints(int value){
         points += value;
@@ -22,6 +27,13 @@ public class Player : MonoBehaviour
     void Awake()
     {
         points = 0;
+    }
+
+    private void Update() {
+        Vector3 viewPos = cam.WorldToViewportPoint(transform.position);
+        if(gameObject && !(viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0)){
+            Die();
+        }
     }
 
     private void OnCollisionEnter(Collision other) {
@@ -44,10 +56,23 @@ public class Player : MonoBehaviour
         }
 
         //TODO:kad se sudari sa preprekama, zaustavlja se igra?
+        if(item.tag == "Obstacle"){
 
+            rgdbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+            //Stop the game after 3 sec
+        }
     }
 
-    private void Update() {
-        
+    void OnCollisionExit(Collision collisionInfo)
+    {
+        GameObject item = collisionInfo.gameObject;
+        if(item.tag == "Obstacle"){
+            rgdbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        }
+    }
+
+    public IEnumerator RipPlayer(int time){
+        yield return new WaitForSecondsRealtime(time);
+        Die();
     }
 }
