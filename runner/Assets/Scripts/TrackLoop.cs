@@ -19,14 +19,18 @@ public class TrackLoop : MonoBehaviour
     private List<RoadMovement> currentRoad;
 
     private List<GameObject> currentBoosters;
+    private List<RoadMovement> currentObstacles;
+
     public GameObject obstaclePrefab;
     private System.Random randomIndex = new System.Random();
     
     private void Awake() {
         currentRoad = new List<RoadMovement>();
         currentBoosters = new List<GameObject>();
+        currentObstacles = new List<RoadMovement>();
 
-        timeToSpeedUp = 120;
+
+        timeToSpeedUp = 60;
 
         middleGround = new List<GameObject>();
         foreach (GameObject item in roadPrefabs)
@@ -55,7 +59,7 @@ public class TrackLoop : MonoBehaviour
     {
         StartCoroutine(SpawnCoroutine(spawnTime));
         StartCoroutine(SpeedUpRoad(timeToSpeedUp));
-        StartCoroutine(Boosters(timeToSpeedUp/40));
+        StartCoroutine(Boosters(7));
         StartCoroutine(Obstacles(spawnTime*2));
     }
 
@@ -63,9 +67,10 @@ public class TrackLoop : MonoBehaviour
         while (true)
         {
             if(randomIndex.NextDouble()>=0.2){
-                Vector3 pos = new Vector3(0f,0.25f,130f);
+                Vector3 pos = new Vector3(0f,0.25f,90f);
                 pos.x = (float)randomIndex.NextDouble() * 4f - 2f;
                 RoadMovement created = InstantiateObject(obstaclePrefab,pos);
+                currentObstacles.Add(created);
                 yield return new WaitForSecondsRealtime(showTime);
             }
         }
@@ -79,7 +84,7 @@ public class TrackLoop : MonoBehaviour
             yield return new WaitForSecondsRealtime(boosterSpawnTime);
             GameObject createPrefab = boosterPrefabs[randomIndex.Next(0,boosterPrefabs.Length)];
             float x = (float)randomIndex.NextDouble() * 5f- 2.5f;
-            float z = 165f;
+            float z = 101f;
 
         //TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
 
@@ -95,6 +100,7 @@ public class TrackLoop : MonoBehaviour
        {
             yield return new WaitForSecondsRealtime(speedUpTime);
             moveSpeed = moveSpeed + 1;
+            Debug.Log("Ubrzava");
             foreach (RoadMovement item in currentRoad)
             {
                 item.SpeedUp(moveSpeed);
@@ -105,6 +111,13 @@ public class TrackLoop : MonoBehaviour
                 if(obj){
                     RoadMovement booster = obj.GetComponent<RoadMovement>();
                     booster.SpeedUp(moveSpeed);
+                }
+            }
+
+            foreach (RoadMovement obj in currentObstacles)
+            {
+                if(obj){
+                    obj.SpeedUp(moveSpeed);
                 }
             }
        }

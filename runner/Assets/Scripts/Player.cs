@@ -53,6 +53,15 @@ public class Player : MonoBehaviour
         if(item.tag == "BluePotion"){
             Debug.Log("blue potion");
             Destroy(other.gameObject);
+            Debug.Log("pokupio plavi");
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            Rigidbody rgbody = player.GetComponent<Rigidbody>();
+            rgbody.isKinematic = true;
+            Vector3 pos = transform.position;
+            pos.y = 0.81f;
+            transform.position = pos;
+            StartCoroutine(EndOfPotion(3));
+    
         }
 
         //TODO:kad se sudari sa preprekama, zaustavlja se igra?
@@ -74,5 +83,19 @@ public class Player : MonoBehaviour
     public IEnumerator RipPlayer(int time){
         yield return new WaitForSecondsRealtime(time);
         Die();
+    }
+
+    public IEnumerator EndOfPotion(int actTime)
+    {
+        bool ind = true;
+        //while(ind){
+            Debug.Log("--------");
+            yield return new WaitForSecondsRealtime(3);
+            Debug.Log("kraj plavog");
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            Rigidbody rgbody = player.GetComponent<Rigidbody>();
+            rgbody.isKinematic = false;    
+            ind=false;
+        ///}
     }
 }
