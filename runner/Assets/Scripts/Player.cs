@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject player;
     [SerializeField] public Camera cam;
 
+    [SerializeField] public GameObject gameOverPopup;
+    
     private bool boosterOn=false;
 
     private int endTime=3;
@@ -21,7 +23,9 @@ public class Player : MonoBehaviour
     public void Die(){
         Destroy(gameObject);
         Debug.Log("Player RIP");
-        //popup to stop the game
+        gameOverPopup.SetActive(true);
+        // TODO: stop the game
+        Time.timeScale = 0;
     }
 
     void Awake()
