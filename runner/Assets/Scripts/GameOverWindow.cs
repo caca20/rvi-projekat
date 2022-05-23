@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOverWindow : MonoBehaviour
+public class GameOverWindow : PauseScript
 {
-    public Player player;
     public Text score;
     public Text playerName;
     // Start is called before the first frame update
     void Start()
     {   
+        Started();
         playerName.text = PlayerPrefs.GetString("Current user");
         score.text = player.points.ToString();
     }
@@ -22,6 +22,7 @@ public class GameOverWindow : MonoBehaviour
     }
 
     void onDisable(){
+        Ended();
         PlayerPrefs.DeleteKey("Current user");
     }
 }

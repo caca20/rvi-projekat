@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseWindow : MonoBehaviour
+public class PauseWindow : PauseScript
 {
     public Text name;
     public Text currCoins;
-    public Player player;
 
     // Start is called before the first frame update
     void Start()
     {
+        Started();
         Debug.Log(name.text);
         name.text = PlayerPrefs.GetString("Current user");
         

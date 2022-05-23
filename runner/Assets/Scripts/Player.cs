@@ -8,34 +8,39 @@ public class Player : MonoBehaviour
     [SerializeField] public Rigidbody rgdbody;
     [SerializeField] public GameObject player;
     [SerializeField] public Camera cam;
-
     [SerializeField] public GameObject gameOverPopup;
+
+    public GameObject bluePotionPrefab;
+    private BluePotion bluePotion;
     
     private bool boosterOn=false;
 
-    private int endTime=3;
+    public GameObject timerBar;
+    private TimerUi boosterTimer;
 
     public void AddPoints(int value){
         points += value;
     }
 
-  //red potion
     public void Die(){
         Destroy(gameObject);
         Debug.Log("Player RIP");
         gameOverPopup.SetActive(true);
-        // TODO: stop the game
         Time.timeScale = 0;
     }
 
     void Awake()
     {
         points = 0;
+        boosterOn = false;
+        bluePotion = bluePotionPrefab.GetComponent<BluePotion>();
+        boosterTimer = timerBar.GetComponent<TimerUi>();
     }
 
     private void Update() {
         Vector3 viewPos = cam.WorldToViewportPoint(transform.position);
-        if(gameObject && !(viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0)){
+        if(gameObject && (transform.position.z<=-13 || transform.position.y<=-1) ){
+        // !(viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0)
             Die();
         }
     }
@@ -49,30 +54,31 @@ public class Player : MonoBehaviour
         }
 
         if(item.tag == "RedPotion"){
-            Die();
             Debug.Log("red potion");
-            Destroy(other.gameObject);
+            if(boosterOn){
+                rgdbody.isKinematic=true;
+            }else{
+                Die();
+                Destroy(other.gameObject);
+            }
         }
 
         if(item.tag == "BluePotion"){
-            Debug.Log("blue potion");
             Destroy(other.gameObject);
-            Debug.Log("pokupio plavi");
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            Rigidbody rgbody = player.GetComponent<Rigidbody>();
-            rgbody.isKinematic = true;
-            Vector3 pos = transform.position;
-            pos.y = 0.81f;
-            transform.position = pos;
-            StartCoroutine(EndOfPotion(3));
+            boosterOn = true;
+            boosterTimer.useBluePotion();
+            rgdbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+            StartCoroutine(EndOfPotion(bluePotion.getTimeActive()));
     
         }
 
-        //TODO:kad se sudari sa preprekama, zaustavlja se igra?
         if(item.tag == "Obstacle"){
-
-            rgdbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
-            //Stop the game after 3 sec
+            if(boosterOn){
+                rgdbody.isKinematic=true;
+            }
+            else{
+                rgdbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+            }
         }
     }
 
@@ -82,24 +88,25 @@ public class Player : MonoBehaviour
         if(item.tag == "Obstacle"){
             rgdbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         }
-    }
 
-    public IEnumerator RipPlayer(int time){
-        yield return new WaitForSecondsRealtime(time);
-        Die();
+        if(boosterOn){
+            if(item.tag == "Coin"){
+                rgdbody.isKinematic = true;
+            }
+            if(item.tag == "Obstacle"){
+                rgdbody.isKinematic = false;
+            }
+
+        }
     }
 
     public IEnumerator EndOfPotion(int actTime)
     {
-        bool ind = true;
-        //while(ind){
-            Debug.Log("--------");
-            yield return new WaitForSecondsRealtime(3);
-            Debug.Log("kraj plavog");
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            Rigidbody rgbody = player.GetComponent<Rigidbody>();
-            rgbody.isKinematic = false;    
-            ind=false;
-        ///}
+        yield return new WaitForSecondsRealtime(actTime);
+        boosterOn = !boosterTimer.timeOver(); 
+        if(!boosterOn){
+            rgdbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+            rgdbody.isKinematic = false; 
+        }
     }
 }

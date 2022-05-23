@@ -6,9 +6,13 @@ public class RoadMovement : MonoBehaviour
 {
     private Vector3 destination = new Vector3(0f,0.81f,-35f);
     private Vector3 moveVector = new Vector3(0f,0f,1f);
-    public float moveSpeed = 3;
+    [SerializeField] public float moveSpeed = 4;
 
     //TODO: kad se pauzira da se zaustavi kretanje ?
+
+    private void Awake() {
+        moveSpeed = 4;
+    }
 
     void Start()
     {

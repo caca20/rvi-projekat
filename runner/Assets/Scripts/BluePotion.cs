@@ -5,13 +5,15 @@ using UnityEngine;
 public class BluePotion : MonoBehaviour
 {
 
-    public int timeActive;
+    private int timeActive = 5;
 
+    public int getTimeActive(){
+        return timeActive;
+    }
     private void Awake() {
-        timeActive = 3;
     }
 
-    private void OnCollisionEnter(Collision other) {
+    /*private void OnCollisionEnter(Collision other) {
         Debug.Log("pokupio plavi");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Rigidbody rgbody = player.GetComponent<Rigidbody>();
@@ -24,7 +26,7 @@ public class BluePotion : MonoBehaviour
         bool ind = true;
         while(ind){
             Debug.Log("--------");
-            yield return new WaitForSecondsRealtime(3);
+            yield return new WaitForSecondsRealtime(timeActive);
             Debug.Log("kraj plavog");
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             Rigidbody rgbody = player.GetComponent<Rigidbody>();
@@ -32,7 +34,7 @@ public class BluePotion : MonoBehaviour
             ind=false;
         }
     }
-
+*/
     void Start()
     {
         

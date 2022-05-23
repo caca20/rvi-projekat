@@ -8,9 +8,11 @@ public class TrackLoop : MonoBehaviour
     [SerializeField] public GameObject[] boosterPrefabs;    
     private Vector3 spawnPoint = new Vector3(0f,0f,340f);
 
+    [SerializeField] public GameObject palmPrefab;
+
     public int spawnTime;
     public int timeToSpeedUp;
-    private int moveSpeed = 3;
+    private int moveSpeed;
 
     public RoadMovement lastSpawned;
     private GameObject endGround;
@@ -21,16 +23,22 @@ public class TrackLoop : MonoBehaviour
     private List<GameObject> currentBoosters;
     private List<RoadMovement> currentObstacles;
 
+    private int side = 8;
+
+    public bool isPaused;
+
     public GameObject obstaclePrefab;
     private System.Random randomIndex = new System.Random();
-    
+
     private void Awake() {
+        isPaused = false;
         currentRoad = new List<RoadMovement>();
         currentBoosters = new List<GameObject>();
         currentObstacles = new List<RoadMovement>();
 
+        moveSpeed = 4;
 
-        timeToSpeedUp = 60;
+        timeToSpeedUp = 35;
 
         middleGround = new List<GameObject>();
         foreach (GameObject item in roadPrefabs)
@@ -48,26 +56,24 @@ public class TrackLoop : MonoBehaviour
     }
 
     private void Update() {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if(player==null){
-            StopAllCoroutines(); //TODO: ne radi iz nekog razloga
-            //popup
-        }
     }
 
     void Start()
     {
         StartCoroutine(SpawnCoroutine(spawnTime));
         StartCoroutine(SpeedUpRoad(timeToSpeedUp));
-        StartCoroutine(Boosters(7));
-        StartCoroutine(Obstacles(spawnTime*2));
+      //  StartCoroutine(Boosters(spawnTime*3));
+       // StartCoroutine(Obstacles(spawnTime*3));
     }
-
+/*
     public IEnumerator Obstacles(int showTime){
         while (true)
         {
-            if(randomIndex.NextDouble()>=0.2){
-                Vector3 pos = new Vector3(0f,0.25f,90f);
+            while(isPaused){
+                yield return null;
+            }
+            if(randomIndex.NextDouble()>=0.3){
+                Vector3 pos = new Vector3(0f,0.25f,80f);
                 pos.x = (float)randomIndex.NextDouble() * 4f - 2f;
                 RoadMovement created = InstantiateObject(obstaclePrefab,pos);
                 currentObstacles.Add(created);
@@ -75,31 +81,49 @@ public class TrackLoop : MonoBehaviour
             }
         }
     }
-    
-
+    */
+/*
     public IEnumerator Boosters(int boosterSpawnTime){
-        //TODO:mozda staviti da se ne stavi svaki ovaj booster nego neki da se preskoce?
         while (true)
         {
-            yield return new WaitForSecondsRealtime(boosterSpawnTime);
-            GameObject createPrefab = boosterPrefabs[randomIndex.Next(0,boosterPrefabs.Length)];
-            float x = (float)randomIndex.NextDouble() * 5f- 2.5f;
-            float z = 101f;
+            while(isPaused){
+                yield return null;
+            }
 
-        //TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
+            if(randomIndex.NextDouble()>=0.3){
+                yield return new WaitForSecondsRealtime(boosterSpawnTime);
+                GameObject createPrefab = boosterPrefabs[randomIndex.Next(0,boosterPrefabs.Length)];
+                float x = (float)randomIndex.NextDouble() * 5f- 2.5f;
+                float z = 101f;
+                //TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
 
-            Vector3 positon = new Vector3(x,0.1f,z);
-            GameObject created = Instantiate(createPrefab,positon,Quaternion.identity);
-            created.transform.Rotate(0f,180f,0f,Space.Self);
-            currentBoosters.Add(created);
+                Vector3 positon = new Vector3(x,0.1f,z);
+                GameObject created = Instantiate(createPrefab,positon,Quaternion.identity);
+                created.transform.Rotate(0f,180f,0f,Space.Self);
+                RoadMovement booster = created.GetComponent<RoadMovement>();
+                booster.SpeedUp(moveSpeed);
+                currentBoosters.Add(created);
+            }
         }
     }
-
+*/
     public IEnumerator SpeedUpRoad(int speedUpTime){
        while (true)
        {
+            while(isPaused){
+                yield return null;
+            }
+
+            //max speed
+            if(moveSpeed == 15){
+                break;
+            }
+
             yield return new WaitForSecondsRealtime(speedUpTime);
             moveSpeed = moveSpeed + 1;
+            if(spawnTime>1){
+                spawnTime = spawnTime-1;
+            }
             Debug.Log("Ubrzava");
             foreach (RoadMovement item in currentRoad)
             {
@@ -120,15 +144,18 @@ public class TrackLoop : MonoBehaviour
                     obj.SpeedUp(moveSpeed);
                 }
             }
+            
        }
     }
 
     //TODO:srediti kod ispod
     public IEnumerator SpawnCoroutine(int timeForSpawn)
     {
-        
         while (true)
         {
+            while(isPaused){
+                yield return null;
+            }
             RoadMovement instantiatedRoad;
             GameObject roadPrefab;
             if (lastSpawned.tag == "SmallBridge"){
@@ -221,9 +248,19 @@ public class TrackLoop : MonoBehaviour
                         }
                     }
                 }
+
+            if(randomIndex.NextDouble()<=0.2){
+                //+-8,0,150
+                Vector3 pos = new Vector3(side,0f,150f);
+                side = -side;
+                InstantiateObject(palmPrefab,pos);
+
+            }
+
             instantiatedRoad = InstantiateObject(roadPrefab, spawnPoint);
             spawnPoint = instantiatedRoad.transform.position;
             lastSpawned = instantiatedRoad;
+            SetBoostersAndObstacles(instantiatedRoad);
             currentRoad.Add(instantiatedRoad);
             yield return new WaitForSecondsRealtime(timeForSpawn);
         }
@@ -236,4 +273,40 @@ public class TrackLoop : MonoBehaviour
         road.transform.localScale = new Vector3(2f,1f,1f);
         return road;    
     }  
+
+    private void SetBoostersAndObstacles(RoadMovement createdRoad ){
+        Vector3 position = new Vector3(0f,0f,0f);
+        position.x = createdRoad.transform.position.x; 
+        position.z = createdRoad.transform.position.z+2f; 
+        
+        if(createdRoad.tag!="SmallBridge"){
+            float rand = (float)randomIndex.NextDouble()*5f-2.5f;
+            position.x = createdRoad.transform.position.x+rand; 
+        }
+        //boosters
+        if(randomIndex.NextDouble()>=0.2){
+            if(createdRoad.tag!="SmallBridge"){
+                float rand = (float)randomIndex.NextDouble()*5f-2.5f;
+                position.x = createdRoad.transform.position.x+rand; 
+            }
+            GameObject createPrefab = boosterPrefabs[randomIndex.Next(0,boosterPrefabs.Length)];
+            GameObject created = Instantiate(createPrefab,position,Quaternion.identity);
+            created.transform.Rotate(0f,180f,0f,Space.Self);
+            RoadMovement booster = created.GetComponent<RoadMovement>();
+            booster.SpeedUp(moveSpeed);
+            currentBoosters.Add(created);
+        }
+
+        //obstacles
+        if(randomIndex.NextDouble()>=0.2){
+            position.y = 0.2f;
+            if(createdRoad.tag!="SmallBridge"){
+                float rand = (float)randomIndex.NextDouble()*5f-2.5f;
+                position.x = createdRoad.transform.position.x+rand; 
+            }
+            position.z+=3f;
+            RoadMovement created = InstantiateObject(obstaclePrefab,position);
+            currentObstacles.Add(created);
+        }
+    }
 }
