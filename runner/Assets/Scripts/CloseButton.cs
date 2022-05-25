@@ -6,9 +6,12 @@ public class CloseButton : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject parent;
+    public GameObject st;
 
     public void close(){
         parent.SetActive(false);
-        Time.timeScale = 1;
+        if(st.active == false){
+            Time.timeScale = 1;
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
@@ -9,9 +10,16 @@ public class PauseButton : MonoBehaviour,IPointerEnterHandler, IPointerExitHandl
 {
     public RectTransform Button;
     public GameObject pause;
+    public GameObject st;
+    
+    public Button btn;
+
     void Start()
     {
         Button.GetComponent<Animator>().Play("hoverOff");
+        /*if(st.active == true){
+            pause.SetActive(false);
+        }*/
     }
 
     // Update is called once per frame
@@ -28,6 +36,7 @@ public class PauseButton : MonoBehaviour,IPointerEnterHandler, IPointerExitHandl
         Button.GetComponent<Animator>().Play("hoverOff");
     }
     public void showPause(){
+        
         Time.timeScale = 0;
         pause.gameObject.SetActive(true);
     }

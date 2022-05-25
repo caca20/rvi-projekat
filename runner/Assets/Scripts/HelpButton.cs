@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class HelpButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -8,6 +9,8 @@ public class HelpButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     
     public RectTransform Button;
     public GameObject help;
+    public Button btn;
+    public GameObject parent;
 
     void Start()
     {
@@ -17,6 +20,9 @@ public class HelpButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // Update is called once per frame
     void Update()
     {
+        if(parent.active == true){
+            //btn.enabled = false;
+        }
         
     }
         

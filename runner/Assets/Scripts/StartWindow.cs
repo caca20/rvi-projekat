@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class StartWindow : PauseScript
 {
     public InputField input;
     public int usersCount;
     private string[] users;    
     public RectTransform StartButton;
-
     void Update()
     {
         
