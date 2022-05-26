@@ -10,6 +10,9 @@ public class StartGame : MonoBehaviour
     public GameObject window;
 
     public GameObject alert;
+    public GameObject btn1;
+    public GameObject btn2;
+    public GameObject btn3;
     private SortedDictionary<string,int> users = new SortedDictionary<string, int>();
 
     void Start()
@@ -45,6 +48,10 @@ public class StartGame : MonoBehaviour
     }
 
     public void startGame(){
+
+        btn1.SetActive(true);
+        btn2.SetActive(true);
+        btn3.SetActive(true);
 
         if(users.ContainsKey(parent.input.text)){
             alert.SetActive(true);

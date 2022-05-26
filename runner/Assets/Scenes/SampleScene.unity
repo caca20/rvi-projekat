@@ -470,6 +470,9 @@ MonoBehaviour:
   parent: {fileID: 285112417}
   window: {fileID: 285112412}
   alert: {fileID: 682319858}
+  btn1: {fileID: 1760042370}
+  btn2: {fileID: 555665969}
+  btn3: {fileID: 348570062}
 --- !u!1 &32625795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,7 +1933,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &348570063
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2077,7 +2080,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Button: {fileID: 348570063}
   pause: {fileID: 1861660869}
-  st: {fileID: 285112412}
   btn: {fileID: 348570064}
 --- !u!1001 &360950873
 PrefabInstance:
@@ -2869,7 +2871,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &555665970
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8626,7 +8628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1760042371
 RectTransform:
   m_ObjectHideFlags: 0

@@ -9,23 +9,18 @@ using UnityEngine.EventSystems;
 public class PauseButton : MonoBehaviour,IPointerEnterHandler, IPointerExitHandler
 {
     public RectTransform Button;
-    public GameObject pause;
-    public GameObject st;
-    
+    public GameObject pause;    
     public Button btn;
 
     void Start()
     {
         Button.GetComponent<Animator>().Play("hoverOff");
-        /*if(st.active == true){
-            pause.SetActive(false);
-        }*/
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnPointerEnter(PointerEventData data){
