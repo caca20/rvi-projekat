@@ -56,5 +56,13 @@ public class PlayerMovements : MonoBehaviour
             rgbody.AddForce(jump*jumpForce, ForceMode.Impulse);
             isGrounded = false;
         }
+
+        if ((Input.GetKeyDown(KeyCode.DownArrow) ) && !isGrounded)
+        {
+            Vector3 downVec = jump;
+            downVec.y = -jump.y*1.5f;
+            rgbody.AddForce(downVec*jumpForce, ForceMode.Impulse);
+            isGrounded = true;
+        }
     }
 }

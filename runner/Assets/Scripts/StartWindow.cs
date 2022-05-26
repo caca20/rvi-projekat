@@ -8,6 +8,10 @@ public class StartWindow : PauseScript
     public int usersCount;
     private string[] users;    
     public RectTransform StartButton;
+
+    private void Start() {
+        Started();
+    }
     void Update()
     {
         
