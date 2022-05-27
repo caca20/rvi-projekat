@@ -49,10 +49,6 @@ public class StartGame : MonoBehaviour
 
     public void startGame(){
 
-        btn1.SetActive(true);
-        btn2.SetActive(true);
-        btn3.SetActive(true);
-
         if(users.ContainsKey(parent.input.text)){
             alert.SetActive(true);
             parent.input.text = "";
@@ -60,6 +56,10 @@ public class StartGame : MonoBehaviour
         } else {
             PlayerPrefs.SetString("Current user", parent.input.text);
             window.SetActive(false);
+            btn1.SetActive(true);
+            btn2.SetActive(true);
+            btn3.SetActive(true);
+
             Time.timeScale = 1;
         }
     }
