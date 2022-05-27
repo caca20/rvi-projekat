@@ -62,51 +62,8 @@ public class TrackLoop : MonoBehaviour
     {
         StartCoroutine(SpawnCoroutine(spawnTime));
         StartCoroutine(SpeedUpRoad(timeToSpeedUp));
-      //  StartCoroutine(Boosters(spawnTime*3));
-       // StartCoroutine(Obstacles(spawnTime*3));
     }
-/*
-    public IEnumerator Obstacles(int showTime){
-        while (true)
-        {
-            while(isPaused){
-                yield return null;
-            }
-            if(randomIndex.NextDouble()>=0.3){
-                Vector3 pos = new Vector3(0f,0.25f,80f);
-                pos.x = (float)randomIndex.NextDouble() * 4f - 2f;
-                RoadMovement created = InstantiateObject(obstaclePrefab,pos);
-                currentObstacles.Add(created);
-                yield return new WaitForSecondsRealtime(showTime);
-            }
-        }
-    }
-    */
-/*
-    public IEnumerator Boosters(int boosterSpawnTime){
-        while (true)
-        {
-            while(isPaused){
-                yield return null;
-            }
 
-            if(randomIndex.NextDouble()>=0.3){
-                yield return new WaitForSecondsRealtime(boosterSpawnTime);
-                GameObject createPrefab = boosterPrefabs[randomIndex.Next(0,boosterPrefabs.Length)];
-                float x = (float)randomIndex.NextDouble() * 5f- 2.5f;
-                float z = 101f;
-                //TODO: treba proveriti da li ispod ima staza, da ne bi lebdelo u vazduhu
-
-                Vector3 positon = new Vector3(x,0.1f,z);
-                GameObject created = Instantiate(createPrefab,positon,Quaternion.identity);
-                created.transform.Rotate(0f,180f,0f,Space.Self);
-                RoadMovement booster = created.GetComponent<RoadMovement>();
-                booster.SpeedUp(moveSpeed);
-                currentBoosters.Add(created);
-            }
-        }
-    }
-*/
     public IEnumerator SpeedUpRoad(int speedUpTime){
        while (true)
        {
@@ -148,7 +105,6 @@ public class TrackLoop : MonoBehaviour
        }
     }
 
-    //TODO:srediti kod ispod
     public IEnumerator SpawnCoroutine(int timeForSpawn)
     {
         while (true)
